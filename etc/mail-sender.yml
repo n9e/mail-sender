@@ -1,0 +1,29 @@
+---
+logger:
+  dir: "logs/mail-sender"
+  level: "DEBUG"
+  keepHours: 24
+
+redis:
+  addr: "127.0.0.1:6379"
+  pass: "1234"
+  idle: 5
+  timeout:
+    conn: 500
+    read: 3000
+    write: 3000
+
+# 这个配置不用动，worker是调用smtp的并发数
+consumer:
+  queue: "/n9e/sender/mail"
+  worker: 10
+
+smtp:
+  from_name: "ulric"
+  from_mail: "ulric@163.com"
+  username: "ulric@163.com"
+  password: "******"
+  server_host: "smtp.163.com"
+  server_port: 25
+  use_ssl: false
+  start_tls: true
