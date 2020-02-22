@@ -9,7 +9,7 @@ import (
 type Config struct {
 	Logger   loggerSection   `yaml:"logger"`
 	Smtp     smtpSection     `yaml:"smtp"`
-	Consumer consumerSection `yaml:"queue"`
+	Consumer consumerSection `yaml:"consumer"`
 	Redis    redisSection    `yaml:"redis"`
 }
 

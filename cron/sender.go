@@ -21,7 +21,6 @@ var semaphore chan int
 var mailer *mail.SMTP
 
 func SendMails() {
-	logger.Debug("in SendMails")
 	c := config.Get()
 
 	// 如果发送SMTP的并发太大，怕SMTP服务器受不了
@@ -37,16 +36,14 @@ func SendMails() {
 		c.Smtp.UseSSL,
 		c.Smtp.StartTLS,
 	)
-	logger.Debug("before for loop")
 
 	for {
 		messages := redisc.Pop(1, c.Consumer.Queue)
-		logger.Debug("after pop")
 		if len(messages) == 0 {
-			logger.Debugf("pop messages is empty, sleeping...")
 			time.Sleep(time.Duration(300) * time.Millisecond)
 			continue
 		}
+
 		logger.Debugf("got messages: %+v", messages)
 		sendMails(messages)
 	}
