@@ -44,7 +44,6 @@ func SendMails() {
 			continue
 		}
 
-		logger.Debugf("got messages: %+v", messages)
 		sendMails(messages)
 	}
 }
