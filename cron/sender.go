@@ -40,9 +40,11 @@ func SendMails() {
 	for {
 		messages := redisc.Pop(1, c.Consumer.Queue)
 		if len(messages) == 0 {
+			logger.Debugf("pop messages is empty, sleeping...")
 			time.Sleep(time.Duration(300) * time.Millisecond)
 			continue
 		}
+		logger.Debugf("got messages: %+v", messages)
 		sendMails(messages)
 	}
 }
