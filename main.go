@@ -59,7 +59,9 @@ func main() {
 	config.InitLogger()
 	redisc.InitRedis()
 
+	logger.Debug("begin cron")
 	go cron.SendMails()
+	logger.Debug("after cron")
 
 	ending()
 }
