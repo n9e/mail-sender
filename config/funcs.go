@@ -3,10 +3,9 @@ package config
 import (
 	"fmt"
 	"os"
-	"time"
 
 	"github.com/toolkits/pkg/logger"
-	"github.com/toolkits/pkg/mail"
+	"gopkg.in/gomail.v2"
 )
 
 // InitLogger init logger toolkits
@@ -26,32 +25,22 @@ func InitLogger() {
 }
 
 func TestSMTP(args []string) {
-	c := Get()
-
-	mailer := mail.NewSMTP(
-		c.Smtp.FromMail,
-		c.Smtp.FromName,
-		c.Smtp.Username,
-		c.Smtp.Password,
-		c.Smtp.ServerHost,
-		c.Smtp.ServerPort,
-		c.Smtp.UseSSL,
-		c.Smtp.StartTLS,
-	)
-
 	if len(args) == 0 {
 		fmt.Println("mail address not given")
 		os.Exit(1)
 	}
 
-	err := mailer.Send(mail.Mail{
-		Tos:     args,
-		Subject: "mail from mail-sender",
-		Content: fmt.Sprintf("%v", time.Now()),
-	})
+	c := Get()
 
-	if err != nil {
-		fmt.Println("error:", err)
-		os.Exit(1)
+	d := gomail.NewDialer(c.Smtp.Host, c.Smtp.Port, c.Smtp.User, c.Smtp.Pass)
+
+	m := gomail.NewMessage()
+	m.SetHeader("From", c.Smtp.User)
+	m.SetHeader("To", args...)
+	m.SetHeader("Subject", "Hello! 中文标题 N9E test")
+	m.SetBody("text/html", "Hello <b>N9E User</b> and <i>中文内容</i>! ")
+
+	if err := d.DialAndSend(m); err != nil {
+		panic(err)
 	}
 }

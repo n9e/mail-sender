@@ -9,8 +9,8 @@ import (
 	"time"
 
 	"github.com/toolkits/pkg/logger"
-	"github.com/toolkits/pkg/mail"
 	"github.com/toolkits/pkg/runner"
+	"gopkg.in/gomail.v2"
 
 	"github.com/n9e/mail-sender/config"
 	"github.com/n9e/mail-sender/dataobj"
@@ -18,7 +18,7 @@ import (
 )
 
 var semaphore chan int
-var mailer *mail.SMTP
+var mailer *gomail.Dialer
 
 func SendMails() {
 	c := config.Get()
@@ -26,16 +26,7 @@ func SendMails() {
 	// 如果发送SMTP的并发太大，怕SMTP服务器受不了
 	semaphore = make(chan int, c.Consumer.Worker)
 
-	mailer = mail.NewSMTP(
-		c.Smtp.FromMail,
-		c.Smtp.FromName,
-		c.Smtp.Username,
-		c.Smtp.Password,
-		c.Smtp.ServerHost,
-		c.Smtp.ServerPort,
-		c.Smtp.UseSSL,
-		c.Smtp.StartTLS,
-	)
+	mailer = gomail.NewDialer(c.Smtp.Host, c.Smtp.Port, c.Smtp.User, c.Smtp.Pass)
 
 	for {
 		messages := redisc.Pop(1, c.Consumer.Queue)
@@ -63,11 +54,13 @@ func sendMail(message *dataobj.Message) {
 	subject := genSubject(message)
 	content := genContent(message)
 
-	err := mailer.Send(mail.Mail{
-		Tos:     message.Tos,
-		Subject: subject,
-		Content: content,
-	})
+	m := gomail.NewMessage()
+	m.SetHeader("From", config.Get().Smtp.User)
+	m.SetHeader("To", message.Tos...)
+	m.SetHeader("Subject", subject)
+	m.SetBody("text/html", content)
+
+	err := mailer.DialAndSend(m)
 
 	logger.Infof("hashid: %d: subject: %s, tos: %v, error: %v", message.Event.HashId, subject, message.Tos, err)
 	logger.Infof("hashid: %d: endpoint: %s, metric: %s, tags: %s", message.Event.HashId, message.ReadableEndpoint, strings.Join(message.Metrics, ","), message.ReadableTags)

@@ -38,14 +38,10 @@ type consumerSection struct {
 }
 
 type smtpSection struct {
-	FromName   string `yaml:"from_name"`
-	FromMail   string `yaml:"from_mail"`
-	Username   string `yaml:"username"`
-	Password   string `yaml:"password"`
-	ServerHost string `yaml:"server_host"`
-	ServerPort int    `yaml:"server_port"`
-	UseSSL     bool   `yaml:"use_ssl"`
-	StartTLS   bool   `yaml:"start_tls"`
+	User string `yaml:"user"`
+	Pass string `yaml:"pass"`
+	Host string `yaml:"host"`
+	Port int    `yaml:"port"`
 }
 
 var yaml Config

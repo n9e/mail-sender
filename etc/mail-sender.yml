@@ -19,11 +19,7 @@ consumer:
   worker: 10
 
 smtp:
-  from_name: "ulric"
-  from_mail: "ulric@163.com"
-  username: "ulric@163.com"
-  password: "******"
-  server_host: "smtp.163.com"
-  server_port: 25
-  use_ssl: false
-  start_tls: true
+  host: "smtp.163.com"
+  port: 25
+  user: "ulric@163.com"
+  pass: "******"
