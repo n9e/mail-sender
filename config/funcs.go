@@ -1,6 +1,7 @@
 package config
 
 import (
+	"crypto/tls"
 	"fmt"
 	"os"
 
@@ -33,6 +34,9 @@ func TestSMTP(args []string) {
 	c := Get()
 
 	d := gomail.NewDialer(c.Smtp.Host, c.Smtp.Port, c.Smtp.User, c.Smtp.Pass)
+	if c.Smtp.InsecureSkipVerify {
+		d.TLSConfig = &tls.Config{InsecureSkipVerify: true}
+	}
 
 	m := gomail.NewMessage()
 	m.SetHeader("From", c.Smtp.User)

@@ -8,6 +8,7 @@ redis:
   addr: "127.0.0.1:6379"
   pass: "1234"
   idle: 5
+  db: 0
   timeout:
     conn: 500
     read: 3000
@@ -23,3 +24,5 @@ smtp:
   port: 25
   user: "ulric@163.com"
   pass: "******"
+  insecureSkipVerify: true
+

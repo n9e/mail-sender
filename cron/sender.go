@@ -2,6 +2,7 @@ package cron
 
 import (
 	"bytes"
+	"crypto/tls"
 	"fmt"
 	"html/template"
 	"path"
@@ -27,6 +28,10 @@ func SendMails() {
 	semaphore = make(chan int, c.Consumer.Worker)
 
 	mailer = gomail.NewDialer(c.Smtp.Host, c.Smtp.Port, c.Smtp.User, c.Smtp.Pass)
+
+	if c.Smtp.InsecureSkipVerify {
+		mailer.TLSConfig = &tls.Config{InsecureSkipVerify: true}
+	}
 
 	for {
 		messages := redisc.Pop(1, c.Consumer.Queue)

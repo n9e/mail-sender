@@ -23,6 +23,7 @@ type redisSection struct {
 	Addr    string         `yaml:"addr"`
 	Pass    string         `yaml:"pass"`
 	Idle    int            `yaml:"idle"`
+	DB      int            `yaml:"db"`
 	Timeout timeoutSection `yaml:"timeout"`
 }
 
@@ -38,10 +39,11 @@ type consumerSection struct {
 }
 
 type smtpSection struct {
-	User string `yaml:"user"`
-	Pass string `yaml:"pass"`
-	Host string `yaml:"host"`
-	Port int    `yaml:"port"`
+	User               string `yaml:"user"`
+	Pass               string `yaml:"pass"`
+	Host               string `yaml:"host"`
+	Port               int    `yaml:"port"`
+	InsecureSkipVerify bool   `yaml:"insecureSkipVerify"`
 }
 
 var yaml Config
