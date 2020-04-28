@@ -56,8 +56,23 @@ func sendMail(message *dataobj.Message) {
 		<-semaphore
 	}()
 
+	cnt := len(message.Tos)
+	tos := make([]string, 0, cnt)
+	for i := 0; i < cnt; i++ {
+		item := strings.TrimSpace(message.Tos[i])
+		if item == "" {
+			continue
+		}
+		tos = append(tos, item)
+	}
+
 	subject := genSubject(message)
 	content := genContent(message)
+
+	if len(tos) == 0 {
+		logger.Warningf("hashid: %d: subject: %s, tos is empty", message.Event.HashId, subject)
+		return
+	}
 
 	m := gomail.NewMessage()
 	m.SetHeader("From", config.Get().Smtp.User)
