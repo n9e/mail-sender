@@ -12,7 +12,7 @@ mkdir -p github.com/n9e
 cd github.com/n9e
 git clone https://github.com/n9e/mail-sender.git
 cd mail-sender
-go build
+./control build
 ```
 
 如上编译完就可以拿到二进制了。
