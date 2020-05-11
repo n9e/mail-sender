@@ -76,7 +76,7 @@ func sendMail(message *dataobj.Message) {
 
 	m := gomail.NewMessage()
 	m.SetHeader("From", config.Get().Smtp.User)
-	m.SetHeader("To", message.Tos...)
+	m.SetHeader("To", tos...)
 	m.SetHeader("Subject", subject)
 	m.SetBody("text/html", content)
 
